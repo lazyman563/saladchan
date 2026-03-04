@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
 
   if (action === 'set_role') {
     const { data: myProf } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-    if (myProf?.role !== 'admin') return NextResponse.json({ error: 'Apenas admin pode mudar roles.' }, { status: 403 })
+    if ((myProf as any)?.role !== 'admin') return NextResponse.json({ error: 'Apenas admin pode mudar roles.' }, { status: 403 })
     await admin.from('profiles').update({ role: body.role }).eq('id', body.userId)
     return NextResponse.json({ ok: true })
   }
