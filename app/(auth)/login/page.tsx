@@ -1,6 +1,7 @@
 'use client'
+import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { Suspense } from 'react'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -21,13 +22,15 @@ function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [forgot,  setForgot]  = useState(false)
   const [forgotEmail, setForgotEmail] = useState('')
+  const [captchaToken, setCaptchaToken] = useState('')
+  const captchaRef = useRef<any>(null)
 
   const { register, handleSubmit, formState: { errors } } = useForm<Form>({ resolver: zodResolver(schema) })
 
   async function onSubmit(data: Form) {
     setLoading(true)
     try {
-      const res  = await fetch('/api/auth', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'login', ...data }) })
+      const res  = await fetch('/api/auth', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'login', ...data, captchaToken }) })
       const json = await res.json()
       if (!res.ok) { toast.error(json.error); return }
       toast.success('Bem-vindo de volta! 🥗')
@@ -103,7 +106,8 @@ function LoginPage() {
                       placeholder:text-tx-3 outline-none focus:border-green-DEFAULT transition-colors"/>
                   {errors.password && <p className="text-red text-xs mt-1">{errors.password.message}</p>}
                 </div>
-                <button type="submit" disabled={loading}
+                <HCaptcha sitekey="d7bc3e8e-a122-4f58-b716-fadaaaf61590" onVerify={setCaptchaToken} ref={captchaRef} theme="dark" />
+                  <button type="submit" disabled={loading || !captchaToken}
                   className="w-full py-3 bg-gradient-to-r from-green-DEFAULT to-teal-DEFAULT text-bg
                     font-black rounded-lg text-sm hover:shadow-green transition-all disabled:opacity-60">
                   {loading ? '🌿 Entrando...' : '🌿 Entrar'}
