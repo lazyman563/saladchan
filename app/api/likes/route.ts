@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   const { data: existing } = await supabase.from('likes').select('id').match(filter).single()
 
   if (existing) {
-    await supabase.from('likes').delete().eq('id', existing.id)
+    await supabase.from('likes').delete().eq('id', (existing as any).id)
     return NextResponse.json({ action: 'unliked' })
   } else {
     await supabase.from('likes').insert({ user_id: user.id, ...filter })
