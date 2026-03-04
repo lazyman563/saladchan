@@ -22,7 +22,7 @@ const TAG_CLASS: Record<string, string> = {
   green:'bt-green', teal:'bt-teal', violet:'bt-violet', pink:'bt-pink', orange:'bt-orange', sky:'bt-sky'
 }
 
-export default function FeedPage() {
+function FeedPage() {
   const supabase   = createClient()
   const params     = useSearchParams()
   const [profile,  setProfile]  = useState<Profile | null>(null)
@@ -483,9 +483,7 @@ function ThreadSkeleton() {
 
 export const dynamic = 'force-dynamic'
 
-// Suspense wrapper — required for useSearchParams in Next.js 14
-import { Suspense } from 'react'
-const OriginalFeed = FeedPage
+
 export default function FeedPageWrapper() {
-  return <Suspense fallback={null}><OriginalFeed /></Suspense>
+  return <Suspense fallback={null}><FeedPage /></Suspense>
 }

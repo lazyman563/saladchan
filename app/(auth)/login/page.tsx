@@ -13,7 +13,7 @@ const schema = z.object({
 })
 type Form = z.infer<typeof schema>
 
-export default function LoginPage() {
+function LoginPage() {
   const router      = useRouter()
   const params      = useSearchParams()
   const redirect    = params.get('redirect') ?? '/feed'
@@ -140,8 +140,6 @@ export default function LoginPage() {
 
 export const dynamic = 'force-dynamic'
 
-import { Suspense } from 'react'
-const OriginalLogin = LoginPage
 export default function LoginPageWrapper() {
-  return <Suspense fallback={null}><OriginalLogin /></Suspense>
+  return <Suspense fallback={null}><LoginPage /></Suspense>
 }
