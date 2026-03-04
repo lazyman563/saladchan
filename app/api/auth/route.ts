@@ -16,6 +16,18 @@ const loginSchema = z.object({
   password:   z.string().min(1),
 })
 
+
+async function verifyCaptcha(token: string) {
+  if (!token) return false
+  const res = await fetch('https://hcaptcha.com/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ secret: process.env.HCAPTCHA_SECRET!, response: token })
+  })
+  const data = await res.json()
+  return data.success
+}
+
 export async function POST(req: NextRequest) {
   const { action, ...body } = await req.json()
   const supabase = createClient()
@@ -23,6 +35,8 @@ export async function POST(req: NextRequest) {
 
   // ── REGISTER ──────────────────────────────────────────────────────────────
   if (action === 'register') {
+    const captchaOk = await verifyCaptcha(body.captchaToken)
+    if (!captchaOk) return NextResponse.json({ error: 'Captcha inválido.' }, { status: 400 })
     const parsed = registerSchema.safeParse(body)
     if (!parsed.success) return NextResponse.json({ error: parsed.error.errors[0].message }, { status: 400 })
     const { username, email, password, displayName } = parsed.data
@@ -59,6 +73,8 @@ export async function POST(req: NextRequest) {
 
   // ── LOGIN ────────────────────────────────────────────────────────────────
   if (action === 'login') {
+    const captchaOk = await verifyCaptcha(body.captchaToken)
+    if (!captchaOk) return NextResponse.json({ error: 'Captcha inválido.' }, { status: 400 })
     const parsed = loginSchema.safeParse(body)
     if (!parsed.success) return NextResponse.json({ error: 'Dados inválidos.' }, { status: 400 })
     const { identifier, password } = parsed.data
