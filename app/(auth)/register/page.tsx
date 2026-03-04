@@ -1,6 +1,5 @@
 'use client'
-import HCaptcha from '@hcaptcha/react-hcaptcha'
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -23,8 +22,6 @@ export default function RegisterPage() {
   const router  = useRouter()
   const [step,    setStep]    = useState<'form'|'verify'>('form')
   const [loading, setLoading] = useState(false)
-  const [captchaToken, setCaptchaToken] = useState('')
-  const captchaRef = useRef<any>(null)
   const [userEmail, setUserEmail] = useState('')
   const [otp,      setOtp]    = useState('')
   const [otpErr,   setOtpErr] = useState('')
@@ -36,7 +33,7 @@ export default function RegisterPage() {
     try {
       const res  = await fetch('/api/auth', {
         method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ action:'register', captchaToken, username:data.username, displayName:data.displayName, email:data.email, password:data.password }),
+        body: JSON.stringify({ action:'register', username:data.username, displayName:data.displayName, email:data.email, password:data.password }),
       })
       const json = await res.json()
       if (!res.ok) { toast.error(json.error); return }
@@ -179,8 +176,7 @@ export default function RegisterPage() {
               </span>
             </label>
             {errors.terms && <p className="text-red text-xs">{errors.terms.message}</p>}
-            <HCaptcha sitekey="d7bc3e8e-a122-4f58-b716-fadaaaf61590" onVerify={setCaptchaToken} ref={captchaRef} theme="dark" />
-                  <button type="submit" disabled={loading || !captchaToken}
+            <button type="submit" disabled={loading}
               className="w-full py-3 bg-gradient-to-r from-green-DEFAULT to-teal-DEFAULT text-bg
                 font-black rounded-lg text-sm hover:shadow-green transition-all disabled:opacity-60 mt-1">
               {loading ? '🌿 Criando conta...' : '🥗 Criar Conta'}
