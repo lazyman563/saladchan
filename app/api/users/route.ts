@@ -1,6 +1,5 @@
-// app/api/users/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/server'
 import { z } from 'zod'
 
 const updateSchema = z.object({
@@ -10,9 +9,8 @@ const updateSchema = z.object({
   website:      z.string().url().optional().or(z.literal('')),
 })
 
-// GET /api/users?username=x — public profile
 export async function GET(req: NextRequest) {
-  const supabase  = createClient()
+  const supabase  = createClient() as any
   const username  = new URL(req.url).searchParams.get('username')
   if (!username) return NextResponse.json({ error: 'username required' }, { status: 400 })
 
@@ -22,15 +20,14 @@ export async function GET(req: NextRequest) {
     .eq('username', username)
     .single()
 
-  if (error || !profile) return NextResponse.json({ error: 'Usuário não encontrado.' }, { status: 404 })
+  if (error || !profile) return NextResponse.json({ error: 'Usuario nao encontrado.' }, { status: 404 })
   return NextResponse.json(profile)
 }
 
-// PATCH /api/users — update own profile
 export async function PATCH(req: NextRequest) {
-  const supabase = createClient()
+  const supabase = createClient() as any
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Não autenticado.' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'Nao autenticado.' }, { status: 401 })
 
   const body   = await req.json()
   const parsed = updateSchema.safeParse(body)
