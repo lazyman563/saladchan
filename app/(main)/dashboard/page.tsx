@@ -25,7 +25,7 @@ export default function DashboardPage() {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) { router.push('/login'); return }
       const { data: prof } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-      if (!prof || !['mod','admin'].includes(prof.role)) { router.push('/feed'); toast.error('Acesso negado.'); return }
+      if (!prof || !['mod','admin'].includes((prof as any).role)) { router.push('/feed'); toast.error('Acesso negado.'); return }
       fetchAll()
     })
   }, [])
