@@ -36,7 +36,7 @@ export default function RegisterPage() {
     try {
       const res  = await fetch('/api/auth', {
         method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ action:'register', captchaToken,, username:data.username, displayName:data.displayName, email:data.email, password:data.password }),
+        body: JSON.stringify({ action:'register', captchaToken, username:data.username, displayName:data.displayName, email:data.email, password:data.password }),
       })
       const json = await res.json()
       if (!res.ok) { toast.error(json.error); return }
