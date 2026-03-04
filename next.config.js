@@ -9,6 +9,7 @@ const nextConfig = {
     ],
   },
   experimental: { serverComponentsExternalPackages: ['sharp'] },
+  unstable_excludeFiles: [],
 }
 
 module.exports = nextConfig
