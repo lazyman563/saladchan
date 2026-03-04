@@ -154,3 +154,5 @@ export default function ProfilePage() {
 function Empty({ msg='Nada por aqui ainda.' }: { msg?: string }) {
   return <div className="text-center py-12 text-tx-3 text-sm">{msg}</div>
 }
+
+export const dynamic = 'force-dynamic'

@@ -480,3 +480,5 @@ function ThreadSkeleton() {
     </div>
   )
 }
+
+export const dynamic = 'force-dynamic'

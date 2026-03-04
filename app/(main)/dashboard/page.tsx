@@ -305,3 +305,5 @@ function MiniBarChart() {
     </div>
   )
 }
+
+export const dynamic = 'force-dynamic'
