@@ -1,8 +1,6 @@
-// app/api/replies/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 
-// GET /api/replies?thread_id=x
 export async function GET(req: NextRequest) {
   const supabase = createClient()
   const threadId = new URL(req.url).searchParams.get('thread_id')
@@ -18,31 +16,29 @@ export async function GET(req: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
+  const r = (replies ?? []) as any[]
   let likedIds: string[] = []
-  if (user && replies?.length) {
-    const ids = replies.map(r => r.id)
+  if (user && r.length) {
+    const ids = r.map((x: any) => x.id)
     const { data: likes } = await supabase.from('likes').select('reply_id').eq('user_id', user.id).in('reply_id', ids)
-    likedIds = (likes ?? []).map(l => l.reply_id!)
+    likedIds = ((likes ?? []) as any[]).map((l: any) => l.reply_id)
   }
 
-  return NextResponse.json((replies ?? []).map(r => ({ ...r, liked_by_me: likedIds.includes(r.id) })))
+  return NextResponse.json(r.map((x: any) => ({ ...x, liked_by_me: likedIds.includes(x.id) })))
 }
 
-// POST /api/replies
 export async function POST(req: NextRequest) {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Não autenticado.' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'Nao autenticado.' }, { status: 401 })
 
   const { thread_id, body, image_url } = await req.json()
-  if (!thread_id || !body?.trim()) return NextResponse.json({ error: 'Dados obrigatórios.' }, { status: 400 })
+  if (!thread_id || !body?.trim()) return NextResponse.json({ error: 'Dados obrigatorios.' }, { status: 400 })
 
-  // Check thread exists and is not locked
   const { data: thread } = await supabase.from('threads').select('locked,author_id').eq('id', thread_id).single()
-  if (!thread) return NextResponse.json({ error: 'Thread não encontrada.' }, { status: 404 })
-  if (thread.locked) return NextResponse.json({ error: 'Thread bloqueada.' }, { status: 403 })
+  if (!thread) return NextResponse.json({ error: 'Thread nao encontrada.' }, { status: 404 })
+  if ((thread as any).locked) return NextResponse.json({ error: 'Thread bloqueada.' }, { status: 403 })
 
-  // Check ban
   const admin = createAdminClient()
   const { data: ban } = await admin.from('bans').select('id').eq('user_id', user.id).single()
   if (ban) return NextResponse.json({ error: 'Conta banida.' }, { status: 403 })
