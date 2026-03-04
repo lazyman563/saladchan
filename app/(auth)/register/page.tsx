@@ -38,7 +38,7 @@ export default function RegisterPage() {
       const json = await res.json()
       if (!res.ok) { toast.error(json.error); return }
       setUserEmail(data.email)
-      setStep('verify')
+      window.location.href = '/feed'
       toast.success('Código enviado para ' + data.email + '! 📧')
     } finally { setLoading(false) }
   }
