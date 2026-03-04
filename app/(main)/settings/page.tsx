@@ -286,7 +286,7 @@ function DangerSection() {
       <div className="border border-red/20 rounded-xl p-4 mb-3 bg-red/3">
         <div className="font-black text-sm mb-1">Desativar Conta</div>
         <div className="text-xs text-tx-3 mb-3">Sua conta fica inativa. Pode ser reativada a qualquer momento.</div>
-        <button onClick={()=>toast('Função em breve.','⚠️')} className="px-4 py-2 border border-red/40 text-red text-xs font-bold rounded-lg hover:bg-red/8 transition-colors">Desativar Conta</button>
+        <button onClick={()=>toast('⚠️ Função em breve.')} className="px-4 py-2 border border-red/40 text-red text-xs font-bold rounded-lg hover:bg-red/8 transition-colors">Desativar Conta</button>
       </div>
       <div className="border border-red/40 rounded-xl p-4 bg-red/5">
         <div className="font-black text-sm text-red mb-1">Deletar Conta Permanentemente</div>
