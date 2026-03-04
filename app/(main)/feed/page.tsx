@@ -73,14 +73,6 @@ function FeedPage() {
   return (
     <div className="max-w-[1160px] mx-auto px-4 py-5">
       {/* Verify banner */}
-      {profile && !profile.verified && (
-        <div className="flex items-center gap-3 mb-4 px-4 py-3 rounded-xl border
-          bg-yellow/5 border-yellow/25 text-yellow text-sm">
-          <span className="text-lg">⚠️</span>
-          <span className="flex-1 font-medium">Verifique seu email para ter acesso completo.</span>
-          <Link href="/settings?tab=account" className="text-xs font-bold border border-yellow/40 rounded-full px-3 py-1 hover:bg-yellow/10 transition-colors">Verificar agora</Link>
-        </div>
-      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_252px] gap-5">
         {/* MAIN */}
