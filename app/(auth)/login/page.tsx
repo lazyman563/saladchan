@@ -139,3 +139,9 @@ export default function LoginPage() {
 }
 
 export const dynamic = 'force-dynamic'
+
+import { Suspense } from 'react'
+const OriginalLogin = LoginPage
+export default function LoginPageWrapper() {
+  return <Suspense fallback={null}><OriginalLogin /></Suspense>
+}

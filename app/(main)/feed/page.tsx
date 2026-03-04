@@ -482,3 +482,10 @@ function ThreadSkeleton() {
 }
 
 export const dynamic = 'force-dynamic'
+
+// Suspense wrapper — required for useSearchParams in Next.js 14
+import { Suspense } from 'react'
+const OriginalFeed = FeedPage
+export default function FeedPageWrapper() {
+  return <Suspense fallback={null}><OriginalFeed /></Suspense>
+}
